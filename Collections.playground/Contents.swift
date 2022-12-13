@@ -1,3 +1,4 @@
+import Foundation
 
 // MARK: - 🟡 Arrays 🟡
 
@@ -225,3 +226,104 @@ for emoji in weatherEmojiesDict.values {
 
 // to create an array with keys or values:
 let weatherKeys = [String](weatherEmojiesDict.keys)
+
+// MARK: - 🟤 Foundation collection types 🟤
+
+// 🟤 NSArray
+
+/* NSArray is immutable by default. If you want to add, remove or modify items after creating the array, you must use the mutable variant class NSMutableArray. */
+
+ /* An NSArray is heterogeneous, meaning it can contain Cocoa objects of different types. Swift arrays are homogeneous, meaning that each Array is guaranteed to contain only one type of object. */
+
+ /* However, you can still define a single Swift Array so it stores various types of Cocoa objects by specifying that the one type is AnyObject, since every Cocoa type is also a subtype of this. */
+
+
+// 🟤 NSDictionary
+
+/* Unlike Swift Dictionary, NSDictionary objects are able to take any NSObject as a key and store any object as a value. */
+
+/* You’ll see this in action when you call a Cocoa API that takes or returns an NSDictionary. From Swift, this type appears as [NSObject: AnyObject]. This indicates that the key must be an NSObject subclass, and the value can be any Swift-compatible object. */
+
+// 🟤 NSSet
+
+/* Unlike Swift Dictionary, NSDictionary objects are able to take any NSObject as a key and store any object as a value. */
+
+// 🟤 NSCache
+
+/* Using NSCache is very similar to using NSMutableDictionary – you just add and retrieve objects by key. The difference is that NSCache is designed for temporary storage for things that you can always recalculate or regenerate. If available memory gets low, NSCache might remove some objects. They are thread-safe, but Apple's documentation warns the cache may decide to automatically mutate itself asynchronously behind the scenes if it is called to free up memory. */
+
+/* This means that an NSCache is like an NSMutableDictionary, except that Foundation may automatically remove an object at any time to relieve memory pressure. This is good for managing how much memory the cache uses, but can cause issues if you rely on an object that may potentially be removed. */
+
+/* NSCache also stores weak references to keys rather than strong references. */
+
+// This API has its roots in the Objective-C days, and as such the generic parameters are constrained to conform to AnyObject, meaning that we cannot use structs and must uses classes instead.
+
+// 🟤 NSCountedSet
+
+/* NSCountedSet tracks how many times you've added an object to a mutable set. It inherits from NSMutableSet, so if you try to add the same object again it will only be reflected once in the set. */
+
+/* However, an NSCountedSet tracks how many times an object has been added. You can see how many times an object was added with .count(for:). */
+
+let countedMutable = NSCountedSet()
+let object = "name"
+    countedMutable.add(object)
+    countedMutable.add(object)
+
+print("NSCountedSet count is \(countedMutable.count), but object: \(object) was added \(countedMutable.count(for: object)) times")
+
+// 🟤 NSOrderedSet
+
+/* An NSOrderedSet along with its mutable counterpart, NSMutableOrderedSet, is a data structure that allows you to store a group of distinct objects in a specific order. */
+
+/* You can use ordered sets as an alternative to arrays when element order matters and performance while testing whether an object is contained in the set is a consideration -- testing for membership of an array is slower than testing for membership of a set. */
+
+/* Because of this, the ideal time to use an NSOrderedSet is when you need to store an ordered collection of objects that cannot contain duplicates. */
+
+// 🟤 NSHashTable and NSMapTable
+
+// 🟤 NSHashTable is similar to NSMutableSet, but you can set memory management and equality comparison terms explicitly using NSHashTableOptions enum.
+
+// 🟤 NSMapTable is a dictionary-like data structure, but with similar behaviors to NSHashTable when it comes to memory management. Like an NSCache, an NSMapTable can hold weak references to keys. However, it can also remove the object related to that key automatically whenever the key is deallocated. These options can be set from the NSMapTableOptions enum.
+
+
+// MARK: - ⚫️ Copy-on-Write mechanism ⚫️
+
+// ⚫️ About
+// By default Value Type[About] does not support COW(Copy on Write) mechanism.
+// Warning: copy on write is a feature specifically added to Swift arrays and dictionaries; you don't get it for free in your own data types.
+
+// how to check address:
+
+// Print memory address
+func address(_ object: UnsafeRawPointer) -> String {
+    let address = Int(bitPattern: object)
+    return NSString(format: "%p", address) as String
+}
+
+// At a basic level, Array is just a structure that holds a reference to a heap-allocated buffer containing the elements – therefore multiple Array instances can reference the same buffer. When you come to mutate a given array instance, the implementation will check if the buffer is uniquely referenced, and if so, mutate it directly. Otherwise, the array will perform a copy of the underlying buffer in order to preserve value semantics.
+
+// ⚫️ Implementing COW in custom value types
+
+final class Ref<T> {
+  var val : T
+  init(_ v : T) {val = v}
+}
+
+struct Box<T> {
+    var ref : Ref<T>
+    init(_ x : T) { ref = Ref(x) }
+
+    var value: T {
+        get { return ref.val }
+        set {
+          if (!isKnownUniquelyReferenced(&ref)) {
+            ref = Ref(newValue)
+            return
+          }
+          ref.val = newValue
+        }
+    }
+}
+// This code was an example taken from the swift repo doc file OptimizationTips
+// Link: https://github.com/apple/swift/blob/master/docs/OptimizationTips.rst#advice-use-copy-on-write-semantics-for-large-values
+
