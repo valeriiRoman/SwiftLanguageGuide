@@ -324,6 +324,98 @@ struct Box<T> {
         }
     }
 }
+
+// MARK: - 🟢 Lazy Collections 🟢
+
+// Collections containing the same elements as a Base collections, but on which some operations such as map and filter are implemented lazily.
+
+// Lazy changes the way the array is processed. When lazy is not used, filter processes the entire array and stores the results into a new array. When lazy is used, the values in the sequence or collection are produced on demand from the downstream functions (the values are not stored in an array; they are just produced when needed).
+
+// 🟢 Example
+
+// Not using Lazy:
+[1, 2, 3, -1, -2].filter({ print("filtered one"); return $0 > 0 })
+    .reduce(0) { (total, elem) -> Int in print("counted one"); return total + 1 }
+// Output:
+
+//filtered one
+//filtered one
+//filtered one
+//filtered one
+//filtered one
+//counted one
+//counted one
+//counted one
+
+// Using Lazy:
+[1, 2, 3, -1, -2].lazy.filter({ print("filtered one"); return $0 > 0 })
+    .reduce(0) { (total, elem) -> Int in print("counted one"); return total + 1 }
+// Output:
+
+//filtered one
+//counted one
+//filtered one
+//counted one
+//filtered one
+//counted one
+//filtered one
+//filtered one
+
+// MARK: - 🔴 Subscripts 🔴
+
+// 🔴 Key points:
+// ☀️ can define multiple subscripts for a single type (the appropriate subscript overload to use is selected based on the type of index value you pass to the subscript)
+// ☀️ aren’t limited to a single dimension, and you can define subscripts with multiple input parameters
+// ☀️ can’t use in-out parameters
+// ☀️ can take and return a value of any type
+// ☀️ unlike instance methods, subscripts can be read-write or read-only.
+
+
+struct TimesTable {
+    let multiplier: Int
+    
+    subscript(index: Double) -> Int {
+        // ⚡️ use getter/setter syntax like computed property for read-write:
+        get {
+            // Return an appropriate subscript value here.
+            return .zero
+        }
+        set(newValue) {
+            // Perform a suitable setting action here.
+        }
+    }
+    
+    subscript(index: Int) -> Int {
+        return multiplier * index
+        // ⚡️ This is read-only
+    }
+    
+    subscript(row: Int, column: Int) -> Int {
+        return multiplier * row * column
+        // ⚡️ can take multiple params and be multiple-dimentional
+    }
+}
+
+// 🔴 type subscript
+enum Planet: Int {
+    case mercury = 1, venus, earth, mars, jupiter, saturn, uranus, neptune
+    static subscript(n: Int) -> Planet {
+        return Planet(rawValue: n)!
+        // ⚡️ classes can use the class keyword instead, to allow subclasses to override the superclass’s implementation
+    }
+}
+let mars = Planet[4]
+print(mars)
+
+let threeTimesTable = TimesTable(multiplier: 3)
+print("six times three is \(threeTimesTable[6])")
+// Prints "six times three is 18"
+
+let twoDimentionalTable = threeTimesTable[6, 3]
+print(twoDimentionalTable)
+
+
+
 // This code was an example taken from the swift repo doc file OptimizationTips
 // Link: https://github.com/apple/swift/blob/master/docs/OptimizationTips.rst#advice-use-copy-on-write-semantics-for-large-values
 

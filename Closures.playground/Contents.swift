@@ -13,13 +13,13 @@ Closures take one of three forms:
 
 /*
 Functions and closures are first-class citizens in Swift because you can treat then like a normal value. For example, you can:
- ❕ assign a function/closure to a local variable .
- ❕ pass a function/closure as an argument .
- ❕ return a function/closure .
+ ❕ assign a function/closure to a local variable.
+ ❕ pass a function/closure as an argument.
+ ❕ return a function/closure.
  */
 
 // ⭕️ Creating instance method references
-// It turns out that for each instance method a type has, there's a corresponding static method that lets you retrieve that instance method as a closure, by passing an instance as an argument.
+// For each instance method a type has, there's a corresponding static method that lets you retrieve that instance method as a closure, by passing an instance as an argument.
 
 // For example, we can use the following to retrieve a reference to the removeFromSuperview method for a given UIView instance:
 
@@ -146,7 +146,6 @@ func chooseStepFunctionFromNesteds(backward: Bool) -> (Int) -> Int {
 
 // Parameters in closure expression can’t have a default value.
 
-
 // 🚹 Inferring Type From Context, Implicit Returns from Single-Expression Closures & Shorthand Argument Names
 
 // If a closure expressions is passed as an argument to a method, Swift can infer the types of its parameters and the type of the value it returns, omitting the return keyword from the declaration and omit the closure’s argument list, like:
@@ -176,9 +175,9 @@ reversedNames = names.sorted(by: >)
 
 /* Let’s see where closures are by default escaping:
 
- ❕ Variables of function type are implicit escaping
- ❕ typealiases are implicit escaping
- ❕ Optional closures are implicit escaping
+ ❕ Variables of function type are implicitly escaping
+ ❕ typealiases are implicitly escaping
+ ❕ Optional closures are implicitly escaping
  */
 // 🚹 Closures Are Reference Types
 
@@ -244,9 +243,82 @@ func autoclosureConditionalPrint(autoclosure: @autoclosure () -> String) {
 normalConditionalPrint(normalArgument: computedValue)
 autoclosureConditionalPrint(autoclosure: computedValue)
 
+// MARK: - ♈️ Methods ♈️
+
+// ♈️ About
+// Methods are functions that are associated with a particular type.
+
+
+// ♈️ Instance method
+// Are methods that you call on an instance of a particular type.
+// It is just a regular functio, declared within the type. It can be used only with the use of the instance of this type, like :
+
+class Counter {
+    var count = 0
+    func increment() {
+        count += 1
+    }
+}
+
+let counter = Counter()
+// the initial counter value is 0
+counter.increment()
+// the counter's value is now 1
+
+
+// ♈️ Type Methods (static)
+// Are methods that are called on the type itself.
+// Classes can use the class keyword instead, to allow subclasses to override the superclass’s implementation of that method.
+
+
+// ♈️ self in methods
+// 👉🏼 in instance methods:
+// Every instance of a type has an implicit property called self, which is exactly equivalent to the instance itself. If you don’t explicitly write self, Swift assumes that you are referring to a property or method of the current instance. The main exception to this rule occurs when a parameter name for an instance method has the same name as a property of that instance. Without the self prefix, Swift would assume that both uses of x referred to the method parameter called x:
+struct Point {
+    var x = 0.0, y = 0.0
+    func isToTheRightOf(x: Double) -> Bool {
+        return self.x > x
+    }
+}
+
+// 👉🏼 in value types instance methods:
+// Mutating methods can assign an entirely new instance to the implicit self property.
+struct Point {
+    var x = 0.0, y = 0.0
+    mutating func moveBy(x deltaX: Double, y deltaY: Double) {
+        self = Point(x: x + deltaX, y: y + deltaY)
+    }
+}
+
+// 👉🏼 in type methods:
+// Within the body of a type method, the implicit self property refers to the type itself
+
+
+// ♈️ @discardableResult attribute
+// Mark methods with @discardableResult when it returns something but You will not necessarily need the result. Example:
+
+struct ExampleStruct {
+    
+    func log(_ message: String) -> String {
+        let logLine = "\(Date.now): \(message)"
+        print(logLine)
+        return logLine
+    }
+    
+    @discardableResult func discardableLog(_ message: String) -> String {
+        let logLine = "\(Date.now): \(message)"
+        print(logLine)
+        return logLine
+    }
+}
+
+let exampleStruct = ExampleStruct()
+_ = exampleStruct.log("Hello, world!")
+exampleStruct.discardableLog("Hello, world!")
 
 /* Sources:
 
 https://medium.com/swift-india/functional-swift-closures-67459b812d0#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjhlMGFjZjg5MWUwOTAwOTFlZjFhNWU3ZTY0YmFiMjgwZmQxNDQ3ZmEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2NzIwNjIwMTEsImF1ZCI6IjIxNjI5NjAzNTgzNC1rMWs2cWUwNjBzMnRwMmEyamFtNGxqZGNtczAwc3R0Zy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwNzY3MDE4NDQ2NjU0MjUyNDIzOSIsImVtYWlsIjoibW90cnVrMDA3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhenAiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJuYW1lIjoiVGFyYXMgTW90cnVrIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FFZEZUcDVjVE9pX3pTTkZibE9VVHVRRmZwSC1GUzVlYV9CYnRmNURmYk1JPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IlRhcmFzIiwiZmFtaWx5X25hbWUiOiJNb3RydWsiLCJpYXQiOjE2NzIwNjIzMTEsImV4cCI6MTY3MjA2NTkxMSwianRpIjoiZTY3NzViNjY3NTVmNWM2YWEyYzE3OTQ0NDg4MmRmZDNlMWYwOWY2ZCJ9.O4ATcPlpI26NADIRcxJK8NA7nF4rTqWsGvDvtJEfZBq2C3nKBGAfiwiQaOibSbXInxp0Ri3C5wL2IyVQe0dhoz9trs0Fh-okub_tUspfW8PSpAqinIyfSpMr2x6m2XsnmB8QzCWqjLCqhFjxyUQqQsrsAgC7ASgoWr_MyQfpmUR0ngaMnL51FkSZOCcuLIVEuCc4aDveORoZ0jTUXxJelxcMGET1Z-52CFUjJybuGbCEoNDMUZQ0HlKzkyKz-ZrixkmpGjRvCvqI1PZSO_DqzMSbcODf6Ck1Rszkhf0GhtENWBum0oRhXvjDzMyCgAJ9I0qFjZlXehsFa8DKfHCi8A
  
+ https://www.hackingwithswift.com/example-code/language/how-to-ignore-return-values-using-discardableresult
  */
