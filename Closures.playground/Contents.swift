@@ -283,10 +283,10 @@ struct Point {
 
 // 👉🏼 in value types instance methods:
 // Mutating methods can assign an entirely new instance to the implicit self property.
-struct Point {
+struct PointTwo {
     var x = 0.0, y = 0.0
     mutating func moveBy(x deltaX: Double, y deltaY: Double) {
-        self = Point(x: x + deltaX, y: y + deltaY)
+        self = PointTwo(x: x + deltaX, y: y + deltaY)
     }
 }
 
