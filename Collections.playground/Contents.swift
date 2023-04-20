@@ -54,7 +54,7 @@ for (index, value) in enumeratedSequence {
 // MARK: - ⚪️ Hashable ⚪️
 
 // ⚪️ Hash value
-/* A key in Dictionarry od an element of a Set must be hashable - the type must provide a way to compute a hash value for itself. A hash value is an Int value that’s the same for all objects that compare equally, such that if a == b, the hash value of a is equal to the hash value of b.
+/* A key in Dictionarry or an element of a Set must be hashable - the type must provide a way to compute a hash value for itself. A hash value is an Int value that’s the same for all objects that compare equally, such that if a == b, the hash value of a is equal to the hash value of b.
  */
 
 // ⚪️ Hashable Protocol

@@ -75,3 +75,49 @@ print(words.binarySearch(for: "world"))
     For 100 items, we need at most 7 lookups
     For 1000 items, we need at most 10 lookups */
 
+// MARK: - 🟣 Recursion 🟣
+
+// 🟣 About
+// When a program is compiled and run, the information about what it is doing is captured in a special data structure named a call stack. Individual procedure calls are pushed on top of the call stack.
+// As the recursive process expands, the stack frames keep accumulating in the call stack. That consumes the amount of memory which grows with the number of the procedure calls. On the contrast, iterative processes are executed in a constant space.
+// Procedures create two kinds of processes: recursive and iterative. In its turn, the recursive process can be of linear and tree form
+
+// 🟣 Recursive function - a function that calls itself.
+// Normally, a recursive function has two branches:
+
+// 👉🏼 For recursive calls.
+// 👉🏼 For breaking the call under certain conditions.
+
+func countDownRecursion(number: Int) {
+    print(number)
+    
+    // condition to break recursion
+    if number == 0 {
+        print("Countdown Stops")
+    }
+    // condition for recursion call
+    else {
+        countDownRecursion(number: number - 1)
+    }
+}
+
+
+print("Countdown:")
+countDownRecursion(number:3)
+
+// Output:
+// Countdown:
+// 3
+// 2
+// 1
+// 0
+// Countdown Stops
+
+// 🟣 Advantages:
+// 👉🏼 It makes our code shorter and cleaner.
+// 👉🏼 Recursion is required in problems concerning data structures and advanced algorithms, such as Graph and Tree Traversal.
+
+// 🟣 Disadvantages:
+// 👉🏼 It takes a lot of stack space compared to an iterative program.
+// 👉🏼 It uses more processor time.
+// 👉🏼 It can be more difficult to debug compared to an equivalent iterative program.

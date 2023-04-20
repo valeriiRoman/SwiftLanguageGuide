@@ -30,7 +30,7 @@ if bugs.contains("Mosquito") {
 
 // A sequence protocol requires a factory method that returns an Iterator type.
 // An iterator is a type that conforms to Iterator protocol. The protocol has a mutating method next() that returns individual values one after the other until it can’t anymore, in which case it returns a nil.
-// So, in order to be able to iterate on th type You can either create custom Iterator, implementing it`s next() method OR implement the requirements of the IteratorProtocol protocol and declare conformance to both Sequence and IteratorProtocol:
+// So, in order to be able to iterate over the type You can either create custom Iterator, implementing it`s next() method OR implement the requirements of the IteratorProtocol protocol and declare conformance to both Sequence and IteratorProtocol:
 
 struct Countdown: Sequence, IteratorProtocol {
     var count: Int

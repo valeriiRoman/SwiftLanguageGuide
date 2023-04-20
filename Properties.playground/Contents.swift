@@ -20,7 +20,6 @@ import Foundation
 // 💥 initial value for a property is dependent on outside factors whose values aren’t known until after an instance’s initialization is complete.
 // 💥 when the initial value for a property requires complex or computationally expensive setup that shouldn’t be performed unless or until it’s needed
 
-
 // MARK: - 🍓 Computed Properties 🍓
 
 // 🍓 About:
@@ -28,9 +27,6 @@ import Foundation
 // 💥 Shopuld be alvays declared as variables, not constants with the var keyword, because their value isn’t fixed.
 
 // 💥 Read-Only Computed Properties - with a getter but no setter
-
-
-
 
 // MARK: - 🌖 Property Observers 🌖
 
@@ -158,11 +154,11 @@ struct MultipleHeightRectangle {
 }
 
 // 📦 Projected values
- 
+// ????
 
 // MARK: - 🧭 Global and Local Variables 🧭
 
-// 💥 Global variables - variables that are defined outside of any function, method, closure, or type context.
+// 💥 Global variables - variables that are defined outside of any function, method, closure context.
 // 💥 Local variables are variables that are defined within a function, method, or closure context.
 
 // if computed:
@@ -177,6 +173,4 @@ struct MultipleHeightRectangle {
 // 💥 Stored type properties should always have a default value
 // 💥 Stored type properties are lazily initialized by default
 
-
 // Stored Properties and Instance Variables ‼️‼️‼️‼️‼️‼️‼️
-// Links:
