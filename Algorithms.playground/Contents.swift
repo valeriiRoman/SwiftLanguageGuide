@@ -14,7 +14,7 @@ array[0] // this is done in O(1)
 
 // 🔴 O(n) or "linear performance" where "n" is the size of the data collection.
 
-// This notation communicates linear growth. The algorithm's execution time or performance degrades linearly with the size of the data set.
+// This notation communicates linear growth. The algorithm's execution time or performance grow linearly with the size of the data set.
 
 // A lot of Swift's built-in functional operators have similar performance and have O(n) complexity: map, filter, compactMap, and even first(where:). All these have to loop over all items in your collection, so the time needed, complexity grow along and proportionally to the size of the collection.
 
@@ -30,7 +30,7 @@ let squareCoords = integers.flatMap { i in
         return (i, j)
     }
 }
-
+ 
 print(squareCoords)
 
 // Generating the squareCoords requires me to loop over integers using flatMap. In that flatMap, I loop over squareCoords again using a map. This means that the line return (i, j) is invoked 25 times which is equal to 5^2. Or in other words, n^2. For every element we add to the array, the time it takes to generate squareCoords grows exponentially. Creating coordinates for a 6x6 square would take 36 loops, 7x7 would take 49 loops, 8x8 takes 64 loops and so forth.
