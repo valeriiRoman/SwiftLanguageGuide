@@ -8,7 +8,7 @@ import Foundation
 
 // 🐙 Safe/Unsafe unowned references
 // 👉🏼 unowned(safe) (the default). It is wrapped reference which will throw an exception when a dealloced instance is referenced. It's sort of like a weak optional reference that's implicitly unwrapped with x! every time it's accessed.
-// 👉🏼 unowned(unsafe). It should not be used in a Swift program, because its purpose is to bridge to code written in Objective C. If you try to access a unsafe unowned reference after the instance that it refers to is deallocated, there will be no exception automatically, like when using a default, safe option. Your program will try to access the memory location where the instance used to be, which is an unsafe operation. It can return some garbage data, random data or crash.
+// 👉🏼 unowned(unsafe). It should not be used in a Swift program, because its purpose is to bridge to code written in Objective C. If you try to access an unsafe unowned reference after the instance that it refers to is deallocated, there will be no exception automatically, like when using a default, safe option. Your program will try to access the memory location where the instance used to be, which is an unsafe operation. It can return some garbage data, random data or crash.
 
 
 // 🐙 Unowned References and Implicitly Unwrapped Optional Properties
@@ -29,7 +29,9 @@ import Foundation
 // 👉🏻 used for: value types, static and final class members
 
 // 🍀 TABLE DISPATCH (aka Runtime dispatch aka Dynamic dispatch)
-// Uses an array of function pointers for each method in the class declaration. Most languages refer to this as a “virtual table,” but Swift uses the term “witness table.” Every subclass has its own copy of the table with a different function pointer for every method that the class has overridden.
+// Classes have tables, called Virtual Tables. Each table has an array of function pointers to methods of the corresponding class.
+// Every subclass has its own copy of Virtual Table with different function pointers to those methods, which are overridden. As a subclass adds a new method to its definition, the method is appended to the end of the corresponding table.
+// The compiler builds the tables, and at runtime, the tables are used to determine which method should be called.
 // To increase performance you can reduce Dynamic Dispatch(Table Dispatch) by adding final when you know that a declaration does not need to be overridden & applying the private keyword (allows the compiler to find all potentially overriding declarations).
 
 // 👉 is slower compared to direct dispatch (the compiler can’t perform any optimisations)
